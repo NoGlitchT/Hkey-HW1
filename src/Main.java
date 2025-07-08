@@ -16,9 +16,9 @@ public class Main {
         Room room3 = new Room(Room.RoomType.Deluxe);
 
         //Guests
-        Guest guest1 = new Guest("Alban Albani", "alban@albanmail.com");
-        Guest guest2 = new Guest("Filan Njeri", "random@fakemail.com");
-        Guest guest3 = new Guest("John Kompjuteri", "computerman@crazymail.com");
+        Guest guest1 = new Guest("Mark Twain", "MT@writernmail.com");
+        Guest guest2 = new Guest("Sean Irish", "random@fakemail.com");
+        Guest guest3 = new Guest("John Computer", "computerman@crazymail.com");
         Guest guest4 = new Guest("Bob Ross", "painterman@artmail.com");
         System.out.println(guest1); //Showing how toString() looks for guest class
         System.out.println("---------------------------------------------");
