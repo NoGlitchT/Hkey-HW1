@@ -16,7 +16,7 @@ public class Booking {
         this.ID = UUID.randomUUID();
         this.room = room;
         this.guest = guest;
-        //Can throw exception.
+        
         updateDates(start, end);
     }
     private int calculatePeriod() {
