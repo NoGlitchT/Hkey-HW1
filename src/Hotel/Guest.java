@@ -1,3 +1,5 @@
+package Hotel;
+
 import java.util.UUID;
 
 public class Guest {

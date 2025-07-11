@@ -1,3 +1,16 @@
+import Exceptions.ServiceNotFoundException;
+import Hotel.Booking;
+import Hotel.Guest;
+import Hotel.Room;
+import Services.HotelService;
+import Services.LaundryService;
+import Services.RoomService;
+import Services.SpaTreatment;
+import Staff.Staff;
+import Staff.Manager;
+import Staff.HouseKeepingStaff;
+import Staff.FrontDeskStaff;
+
 import java.time.LocalDate;
 
 public class Main {
@@ -37,7 +50,7 @@ public class Main {
         Booking booking1 = new Booking(room1, guest1, date1, date2);
         System.out.println(booking1); //Showing toString() of booking class
         System.out.println("---------------------------------------------");
-        //Has bad dates, will not be able to add this to Hotel
+        //Has bad dates, will throw exception internally and not be created
         Booking booking2 = new Booking(room2, guest2, date4, date3);
         //Overlaps with booking1
         Booking booking3 = new Booking(room1, guest3, date7, date5);
@@ -52,15 +65,13 @@ public class Main {
 
         //Adding bookings
         hKey.addBooking(booking1);
-        //Will not add because bad dates
-        hKey.addBooking(booking2);
         //Will not add because overlaps with booking1
         hKey.addBooking(booking3);
         //Adding with other parameters, not just with booking class
         hKey.addBooking(room3, guest4, date6, date8);
         System.out.println("---------------------------------------------");
 
-        //Room list & Booking list
+        //Hotel.Room list & Hotel.Booking list
         hKey.displayRooms();
         System.out.println("---------------------------------------------");
         hKey.displayBookings();
@@ -72,6 +83,69 @@ public class Main {
         //Showing they were removed:
         System.out.println("---------------------------------------------");
         hKey.displayBookings();
+
+        //---------------HOMEWORK 2------------------------------------------------------------------------
+        System.out.println("---------------------------------------------");
+        HotelService service1 = new LaundryService(date1, date2); //Random dates. Indicates how long the service is used for
+        System.out.println(service1);
+        //All services have base cost and description, description can be changed for whole class.
+        LaundryService.setServiceDescription("This is a new description!");
+        System.out.println(service1);
+
+        HotelService service2 = new LaundryService(date8, date1); //Bad dates, won't be created.
+        //Each instance of a service is a booking, to be added to a paricular guest booking's total
+        HotelService service3 = new RoomService(date1, date2);
+        HotelService service4 = new SpaTreatment(date1, date2);
+        System.out.println(service3);
+        System.out.println(service4);
+
+
+        //If service type didnt exist, would throw exception
+        try {
+            hKey.addService(service1);
+        } catch (ServiceNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            hKey.addService(service3);
+        } catch (ServiceNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            hKey.addService(service4);
+        } catch (ServiceNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("---------------------------------------------");
+        hKey.displayServices();
+
+        //Staff
+        System.out.println("---------------------------------------------");
+        Staff manager = new Manager("Bob Ross", "Sanitation department");
+        Staff housekeeper = new HouseKeepingStaff("Emily Cleaner");
+        FrontDeskStaff frontDesk = new FrontDeskStaff("John Greeter");
+
+        manager.performDuty();
+        housekeeper.performDuty();
+
+        //Perform duty for front desk calls greetGuest(), but there is also greetGuest(String)
+        frontDesk.performDuty();
+        frontDesk.greetGuest(guest1.getFullName());
+
+        System.out.println("---------------------------------------------");
+        hKey.addStaff(manager);
+        hKey.addStaff(housekeeper);
+        hKey.addStaff(frontDesk);
+        System.out.println("---------------------------------------------");
+        //All workers do work, also showing worker list
+        hKey.displayStaff();
+        System.out.println("---------------------------------------------");
+        hKey.workStaff();
+
+        System.out.println("---------------------------------------------");
+        //The following method can use any list of services, which would be added together, in this case i used all
+        //that the class had
+        System.out.println("Current total for Mr.Twain is " + hKey.bookingTotal(booking1, hKey.getServices()));
 
     }
 }

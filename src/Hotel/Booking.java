@@ -1,9 +1,14 @@
+package Hotel;
+
+import Exceptions.InvalidInputDatesException;
+import Interfaces.Chargeable;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-public class Booking {
+public class Booking implements Chargeable {
     private final UUID ID;
     private final Room room;
     private final Guest guest;
@@ -16,18 +21,26 @@ public class Booking {
         this.ID = UUID.randomUUID();
         this.room = room;
         this.guest = guest;
-        
-        updateDates(start, end);
+        try {
+            updateDates(start, end);
+        } catch (InvalidInputDatesException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
     private int calculatePeriod() {
         return start.until(end)
                 .getDays();
     }
-    private BigDecimal calculateCost() {
+    @Override
+    public BigDecimal calculateCost() {
         return BigDecimal.valueOf(period)
                 .multiply(room.getType().getRate());
     }
-    public void updateDates(LocalDate start, LocalDate end) {
+    public void updateDates(LocalDate start, LocalDate end) throws InvalidInputDatesException {
+        if (start.isAfter(end)) {
+            throw new InvalidInputDatesException("End date is before start date!");
+        }
         this.end = end;
         this.start = start;
         this.period = calculatePeriod();
@@ -59,9 +72,9 @@ public class Booking {
     @Override
     public String toString() {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd . MM . yyyy");
-        return "Booking reservation details...\nBooking ID: " + getID() +
-                "\nRoom details:\n" + getRoom().toString() +
-                "\nGuest:\n" + getGuest().toString() +
+        return "Hotel.Booking reservation details...\nHotel.Booking ID: " + getID() +
+                "\nHotel.Room details:\n" + getRoom().toString() +
+                "\nHotel.Guest:\n" + getGuest().toString() +
                 "\nStart & End Date:\n" + getStart().format(format) + " " + getEnd().format(format) +
                 "\nPeriod: " + getPeriod() + " days." +
                 "\nTotal cost: " + getCost() + "$";
